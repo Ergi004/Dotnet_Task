@@ -12,9 +12,6 @@ using System.IO;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
-
-
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerGen(c =>
