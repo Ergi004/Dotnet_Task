@@ -6,6 +6,7 @@ using dotnet_tut.Data;
 using dotnet_tut.Models;
 using System;
 using System.Linq;
+using Microsoft.AspNetCore.Http;
 
 namespace dotnet_tut.Controllers
 {
@@ -15,7 +16,21 @@ namespace dotnet_tut.Controllers
     {
         private readonly AppDbContext _db;
         public TransactionsController(AppDbContext db) => _db = db;
+
+
+
+        
+        /// <summary>Gets all transaction, and filtering options are provided.</summary>
+        /// <param name="transactionType">The transactionType payload.</param>
+        /// <param name="minAmount">The minAmount payload.</param>
+        /// <param name="maxAmount">The maxAmount payload.</param>
+        /// <param name="fromDate">The fromDate payload.</param>
+        /// <param name="toDate">The toDate payload.</param>
+        /// <param name="customerName">The customerName payload.</param>
+        /// <returns>The array of filtered transactions.</returns>
         [HttpGet]
+        [ProducesResponseType(typeof(Transactions[]), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<IEnumerable<Transactions>>> GetTransactions(
             [FromQuery] TransactionTypeEnum? transactionType,
             [FromQuery] int? minAmount,
@@ -50,15 +65,27 @@ namespace dotnet_tut.Controllers
 
 
 
+        /// <summary>Gets a transaction by id.</summary>
+        /// <param name="id">The transaction payload.</param>
+        /// <returns>The transaction found by the id param.</returns>
         [HttpGet("{id}")]
-        public async Task<ActionResult<Transactions>> GetTransaction(int id)
+        [ProducesResponseType(typeof(Transactions), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+                public async Task<ActionResult<Transactions>> GetTransaction(int id)
         {
             var transaction = await _db.Transactions.FindAsync(id);
             if (transaction == null) return NotFound();
             return transaction;
         }
 
-        [HttpPost]
+
+
+        /// <summary>Creates a new transaction.</summary>
+        /// <param name="transaction">The transaction payload.</param>
+        /// <returns>The created transaction with its new ID.</returns>
+        [HttpPost("create")] 
+        [ProducesResponseType(typeof(Transactions), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<Transactions>> CreateTransaction(Transactions transaction)
         {
             _db.Transactions.Add(transaction);
@@ -68,7 +95,13 @@ namespace dotnet_tut.Controllers
         }
 
 
-        [HttpPut("{id}")]
+        /// <summary>Updates a transaction.</summary>
+        /// <param name="id">The transaction payload.</param>
+        /// <param name="updateTransaction">The transaction payload.</param>
+        /// <returns>The updated transaction.</returns>
+        [HttpPut("update/{id}")]
+        [ProducesResponseType(typeof(Transactions), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async  Task<ActionResult<Transactions>> UpdateTransaction(Transactions updateTransaction, int id)
         {
             var transaction = await _db.Transactions.FindAsync(id);
@@ -87,7 +120,16 @@ namespace dotnet_tut.Controllers
             return updateTransaction ;
         }
         
-         [HttpDelete("{id}")]
+
+
+
+
+        /// <summary>Deletes a transaction.</summary>
+        /// <param name="id">The id payload.</param>
+        /// <returns>No Content.</returns>
+        [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult> DeleteTransaction(int id)
         {
             System.Diagnostics.Debug.WriteLine("This is a log");
@@ -101,8 +143,14 @@ namespace dotnet_tut.Controllers
             return NoContent();
         }
 
-
+        /// <summary>Deletes a transaction.</summary>
+        /// <param name="customerName">The customerName payload.</param>
+        /// <param name="customerPhone">The customerPhone payload.</param>
+        /// <param name="customerEmail">The customerEmail payload.</param>
+        /// <returns>The summary of the filtered transactions, or the summary of all transactions.</returns>
         [HttpGet("summary")]
+        [ProducesResponseType(typeof(TransactionSummaryDto), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<TransactionSummaryDto>> GetTransactionSummary(
             [FromQuery] string customerName = null,
             [FromQuery] string customerPhone = null,
