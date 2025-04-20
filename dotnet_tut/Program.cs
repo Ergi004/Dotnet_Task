@@ -1,17 +1,17 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using dotnet_tut.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
-
-builder.Services
-    .AddControllersWithViews();
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+});
 
 builder.Services.AddDbContext<AppDbContext>(opts =>
     opts.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
@@ -52,11 +52,6 @@ app.UseCors();
 app.UseRouting();
 
 app.MapControllers();
-
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller}/{action=Index}/{id?}"
-);
 
 if (!app.Environment.IsDevelopment())
 {

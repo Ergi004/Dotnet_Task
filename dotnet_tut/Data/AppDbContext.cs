@@ -12,8 +12,11 @@ namespace dotnet_tut.Data
         protected override void OnModelCreating(ModelBuilder mb)
         {
             mb.Entity<Transactions>()
-              .Property(u => u.CreatedAt)
+              .Property(t => t.CreatedAt)
               .HasDefaultValueSql("GETDATE()");
+            mb.Entity<Transactions>()
+            .Property(t => t.TransactionType)
+            .HasConversion<string>();
         }
     }
 }

@@ -11,7 +11,7 @@ namespace dotnet_tut.Models
         public string Description { get; set; } 
         public string CustomerFullName { get; set; }
         public string CustomerMainPhoneNumber { get; set; }
-        public string TransactionType { get; set; } 
+        public TransactionTypeEnum TransactionType { get; set; } 
         public string CustomerMainEmailAddress { get; set; }
         public string CustomerMainAddress { get; set; } 
         public DateTime CreatedAt { get; set; }
