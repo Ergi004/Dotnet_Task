@@ -17,6 +17,9 @@ namespace dotnet_tut.Data
             mb.Entity<Transactions>()
             .Property(t => t.TransactionType)
             .HasConversion<string>();
+             mb.Entity<Transactions>()
+            .Property(t => t.Status)
+            .HasConversion<string>();
         }
     }
 }
