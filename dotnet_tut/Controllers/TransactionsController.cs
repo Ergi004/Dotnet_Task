@@ -140,7 +140,7 @@ namespace dotnet_tut.Controllers
             return NoContent();
         }
 
-        /// <summary>Deletes a transaction.</summary>
+        /// <summary>Gets a summary of  the transactions.</summary>
         /// <param name="customerName">The customerName payload.</param>
         /// <param name="customerPhone">The customerPhone payload.</param>
         /// <param name="customerEmail">The customerEmail payload.</param>
