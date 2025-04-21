@@ -16,10 +16,7 @@ namespace dotnet_tut.Controllers
     {
         private readonly AppDbContext _db;
         public TransactionsController(AppDbContext db) => _db = db;
-
-
-
-        
+  
         /// <summary>Gets all transaction, and filtering options are provided.</summary>
         /// <param name="transactionType">The transactionType payload.</param>
         /// <param name="minAmount">The minAmount payload.</param>
