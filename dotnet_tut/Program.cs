@@ -53,11 +53,12 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 
-builder.Services.AddControllers().AddJsonOptions(options =>
-{
-    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-});
-
+builder.Services.AddControllers()
+    .AddJsonOptions(opts =>
+    {
+        opts.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+        opts.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+    });
 builder.Services.AddDbContext<AppDbContext>(opts =>
     opts.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
 );

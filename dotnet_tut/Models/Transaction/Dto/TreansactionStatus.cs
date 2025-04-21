@@ -4,6 +4,6 @@ namespace dotnet_tut.Models
     {
        Failed,
        Successful,
-       voided
+       Voided
     }
 }
