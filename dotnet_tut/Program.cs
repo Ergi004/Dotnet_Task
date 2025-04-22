@@ -64,7 +64,6 @@ builder.Services.AddDbContext<AppDbContext>(opts =>
     opts.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
 
-builder.Services.AddSpaStaticFiles(cfg => cfg.RootPath = "client/build");
 
 
 builder.Services.AddCors(options =>
@@ -103,20 +102,13 @@ else
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-app.UseSpaStaticFiles();
 app.UseCors();
 
 app.UseRouting();
 
 app.MapControllers();
 
-if (!app.Environment.IsDevelopment())
-{
-    app.UseSpa(spa =>
-    {
-        spa.Options.SourcePath = "client";
-    });
-}
+
 
 
 app.Run();
