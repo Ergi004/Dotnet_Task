@@ -23,7 +23,6 @@ namespace dotnet_tut.Controllers
         /// <param name="maxAmount">The maxAmount payload.</param>
         /// <param name="fromDate">The fromDate payload.</param>
         /// <param name="toDate">The toDate payload.</param>
-        /// <param name="customerName">The customerName payload.</param>
         /// <param name="customerId">The customerId payload.</param>
         /// <returns>The array of filtered transactions.</returns>
         [HttpGet]
@@ -35,7 +34,6 @@ namespace dotnet_tut.Controllers
             [FromQuery] int? maxAmount                      = null,
             [FromQuery] DateTime? fromDate                  = null,
             [FromQuery] DateTime? toDate                    = null,
-            [FromQuery] string customerName                 = null,
             [FromQuery] int? customerId                     = null
         )
         {
@@ -53,8 +51,6 @@ namespace dotnet_tut.Controllers
                 query = query.Where(t => t.CreatedAt >= fromDate.Value);
             if (toDate.HasValue)
                 query = query.Where(t => t.CreatedAt <= toDate.Value);
-            if (!string.IsNullOrWhiteSpace(customerName))
-                query = query.Where(t => t.Customer.FullName.Contains(customerName));
             if (customerId.HasValue)
                 query = query.Where(t => t.CustomerId == customerId.Value);
 
@@ -72,9 +68,7 @@ namespace dotnet_tut.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<Transactions>> GetTransaction(int id)
         {
-            var transaction = await _db.Transactions
-                                       .Include(t => t.Customer)
-                                       .FirstOrDefaultAsync(t => t.Id == id);
+            var transaction = await _db.Transactions.FindAsync(id);
             if (transaction == null) return NotFound();
             return Ok(transaction);
         }
@@ -113,7 +107,6 @@ namespace dotnet_tut.Controllers
                 return NotFound($"No transaction found with ID = {id}");
 
         
-
             transaction.Amount               = updateTransaction.Amount;
             transaction.Description          = updateTransaction.Description;
             transaction.TransactionType      = updateTransaction.TransactionType;
